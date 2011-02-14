@@ -1,0 +1,65 @@
+/**
+ * Mx prototype
+ */
+#include <clutter/clutter.h>
+
+static const gint WIN_W = 640;
+static const gint WIN_H = 480;
+
+typedef struct stuff_
+{
+    ClutterActor *group;
+} Stuff;
+
+static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer data)
+{
+    Stuff *self = (Stuff *) data;
+    (void) self; // unused
+    switch (event->keyval)
+    {
+        case CLUTTER_Escape:
+            clutter_main_quit();
+            break;
+        case CLUTTER_space:
+            break;
+        default:
+            break;
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    clutter_init(&argc, &argv);
+
+    ClutterActor *stage = NULL;
+    ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
+    stage = clutter_stage_get_default();
+    clutter_stage_set_title(CLUTTER_STAGE(stage), "Mx test");
+    clutter_stage_set_color(CLUTTER_STAGE(stage), &black);
+    clutter_actor_set_size(stage, WIN_W, WIN_H);
+
+    Stuff *self = g_new0(Stuff, 1);
+    ClutterLayoutManager *layout = clutter_flow_layout_new(CLUTTER_FLOW_HORIZONTAL);
+    clutter_flow_layout_set_row_spacing(CLUTTER_FLOW_LAYOUT(layout), 4.0f);
+    clutter_flow_layout_set_column_spacing(CLUTTER_FLOW_LAYOUT(layout), 4.0f);
+    self->group = clutter_box_new(layout);
+    clutter_actor_set_width(self->group, clutter_actor_get_width(stage));
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage), self->group);
+    clutter_actor_set_y(self->group, 8.0f);
+    
+    int i;
+    ClutterColor orange = { 0xff, 0xcc, 0x33, 0xff };
+    for (i = 0; i < 10; ++i)
+    {
+        ClutterActor *actor = clutter_rectangle_new_with_color(&orange);
+        gfloat SIZE = 80.0f;
+        clutter_actor_set_size(actor, SIZE, SIZE);
+        clutter_container_add_actor(CLUTTER_CONTAINER(self->group), actor);
+    }
+    
+    g_signal_connect(stage, "key-press-event", G_CALLBACK(key_event_cb), self);
+    clutter_actor_show(stage);
+    clutter_main();
+    return 0;
+}
+
