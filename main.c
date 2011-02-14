@@ -2,6 +2,7 @@
  * Mx prototype
  */
 #include <clutter/clutter.h>
+#include <mx/mx.h>
 
 static const gint WIN_W = 640;
 static const gint WIN_H = 480;
@@ -9,6 +10,7 @@ static const gint WIN_H = 480;
 typedef struct stuff_
 {
     ClutterActor *group;
+    ClutterActor *slider;
 } Stuff;
 
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer data)
@@ -25,6 +27,15 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer d
         default:
             break;
     }
+}
+
+static void on_button_clicked(ClutterActor *actor, gpointer data)
+{
+    Stuff *self = (Stuff *) data;
+    (void) self; // unused
+    (void) actor; // unused
+    g_print("clicked\n");
+    g_print("slider value: %f\n", mx_slider_get_value(MX_SLIDER(self->slider)));
 }
 
 int main(int argc, char *argv[])
@@ -56,6 +67,13 @@ int main(int argc, char *argv[])
         clutter_actor_set_size(actor, SIZE, SIZE);
         clutter_container_add_actor(CLUTTER_CONTAINER(self->group), actor);
     }
+    
+    ClutterActor *slider = mx_slider_new();
+    ClutterActor *button = mx_button_new_with_label("Click me!");
+    clutter_container_add_actor(CLUTTER_CONTAINER(self->group), slider);
+    clutter_container_add_actor(CLUTTER_CONTAINER(self->group), button);
+    self->slider = slider;
+    g_signal_connect(button, "clicked", G_CALLBACK(on_button_clicked), self);
     
     g_signal_connect(stage, "key-press-event", G_CALLBACK(key_event_cb), self);
     clutter_actor_show(stage);
