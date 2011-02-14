@@ -58,6 +58,19 @@ int main(int argc, char *argv[])
     clutter_container_add_actor(CLUTTER_CONTAINER(stage), self->group);
     clutter_actor_set_y(self->group, 8.0f);
     
+    // TOOLBAR
+    ClutterActor *toolbar = mx_toolbar_new();
+    mx_toolbar_set_has_close_button(MX_TOOLBAR(toolbar), FALSE);
+    clutter_actor_set_width(toolbar, WIN_W);
+    ClutterActor *tools = mx_box_layout_new();
+    ClutterActor *button_a = mx_button_new_with_label("Click A!");
+    ClutterActor *button_b = mx_button_new_with_label("Click B!");
+    mx_box_layout_add_actor(MX_BOX_LAYOUT(tools), button_b, 0);
+    mx_box_layout_add_actor(MX_BOX_LAYOUT(tools), button_a, 0);
+    mx_bin_set_child(MX_BIN(toolbar), tools), 
+    clutter_container_add_actor(CLUTTER_CONTAINER(self->group), toolbar);
+
+    // RECTANGLES
     int i;
     ClutterColor orange = { 0xff, 0xcc, 0x33, 0xff };
     for (i = 0; i < 10; ++i)
@@ -67,14 +80,16 @@ int main(int argc, char *argv[])
         clutter_actor_set_size(actor, SIZE, SIZE);
         clutter_container_add_actor(CLUTTER_CONTAINER(self->group), actor);
     }
-    
+
+    // SLIDER + BUTTON
     ClutterActor *slider = mx_slider_new();
     ClutterActor *button = mx_button_new_with_label("Click me!");
     clutter_container_add_actor(CLUTTER_CONTAINER(self->group), slider);
     clutter_container_add_actor(CLUTTER_CONTAINER(self->group), button);
     self->slider = slider;
     g_signal_connect(button, "clicked", G_CALLBACK(on_button_clicked), self);
-    
+
+    // DONE
     g_signal_connect(stage, "key-press-event", G_CALLBACK(key_event_cb), self);
     clutter_actor_show(stage);
     clutter_main();
