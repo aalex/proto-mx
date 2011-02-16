@@ -22,7 +22,7 @@ ClutterScript *require_script(const gchar *filename)
     clutter_script_load_from_file(script, filename, &error);
     if (error)
     {
-        g_critical("Error loading JSON script %s: %s", filename, error->message);
+        g_error("Error loading JSON script %s: %s", filename, error->message);
         g_error_free(error);
         g_object_unref(script);
         script = NULL;
@@ -43,7 +43,7 @@ GObject *require_object_from_script(ClutterScript *script, const gchar *name)
         gchar *filename;
 
         g_object_get(G_OBJECT(script), "filename-set", &filename_set, "filename", &filename, NULL);
-        g_critical("No object %s found in clutter script %s.", name, filename_set ? filename : "unknown");
+        g_error("No object %s found in clutter script %s.", name, filename_set ? filename : "unknown");
         g_free(filename);
     }
     return obj;
@@ -56,6 +56,7 @@ typedef struct assistant_
 {
     ClutterActor *stage;
     ClutterActor *slider;
+    ClutterActor *combo_box;
     ClutterScript *script;
     gboolean ready_;
 } Assistant;
@@ -76,10 +77,10 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer d
     }
 }
 
-extern "C"
-{
-    void on_button_clicked(MxButton *button, gpointer user_data);
-}
+//extern "C"
+//{
+//    void on_button_clicked(MxButton *button, gpointer user_data);
+//}
 
 void on_button_clicked(MxButton *button, gpointer user_data)
 {
@@ -109,8 +110,15 @@ int main(int argc, char *argv[])
     assistant->stage = stage;
     ClutterActor *root = CLUTTER_ACTOR(require_object_from_script(assistant->script, "root"));
     assistant->slider = CLUTTER_ACTOR(require_object_from_script(assistant->script, "slider"));
+    assistant->combo_box = CLUTTER_ACTOR(require_object_from_script(assistant->script, "combo_box"));
     clutter_container_add_actor(CLUTTER_CONTAINER(stage), root);
-    //g_signal_connect(button, "clicked", G_CALLBACK(on_button_clicked), assistant);
+
+    // Combo box contents:
+    MxComboBox *combo_box = MX_COMBO_BOX(assistant->combo_box);
+    mx_combo_box_append_text(combo_box, "Foo");
+    mx_combo_box_append_text(combo_box, "Spam");
+    mx_combo_box_append_text(combo_box, "Lorem ipsum");
+    mx_combo_box_set_index(combo_box, 0);
 
     // DONE
     g_signal_connect(stage, "key-press-event", G_CALLBACK(key_event_cb), assistant);

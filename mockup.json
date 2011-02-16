@@ -6,10 +6,17 @@
     "children" : 
     [
         {
-            "id" : "ok-button",
+            "id" : "label0",
+            "type" : "MxLabel",
+            "text" : "Button:",
+            "x" : 50,
+            "y" : 50
+        },
+        {
+            "id" : "button",
             "type" : "MxButton",
             "label" : "OK",
-            "x" : 50,
+            "x" : 150,
             "y" : 50,
             "width" : 200,
             "signals" :
@@ -21,10 +28,31 @@
             ]
         },
         {
+            "id" : "label1",
+            "type" : "MxLabel",
+            "text" : "Combo box:",
+            "x" : 50,
+            "y" : 100
+        },
+        {
+            "id" : "combo_box",
+            "type" : "MxComboBox",
+            "x" : 150,
+            "y" : 100,
+            "width" : 200
+        },
+        {
+            "id" : "label2",
+            "type" : "MxLabel",
+            "text" : "Combo box:",
+            "x" : 50,
+            "y" : 150
+        },
+        {
             "id" : "slider",
             "type" : "MxSlider",
-            "x" : 50,
-            "y" : 100,
+            "x" : 150,
+            "y" : 150,
             "width" : 200
         }
     ]
