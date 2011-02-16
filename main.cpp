@@ -5,6 +5,7 @@
 #include <mx/mx.h>
 
 #define GUI_SCRIPT "mockup.json"
+#define UNUSED(x) ((void) (x))
 
 gboolean state_matches_string(ClutterState *state, gchar *name)
 {
@@ -54,7 +55,9 @@ static const gint WIN_H = 480;
 typedef struct assistant_
 {
     ClutterActor *stage;
+    ClutterActor *slider;
     ClutterScript *script;
+    bool ready_;
 } Assistant;
 
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer data)
@@ -72,16 +75,24 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer d
             break;
     }
 }
-/*
-static void on_button_clicked(ClutterActor *actor, gpointer data)
+
+extern "C"
 {
-    Assistant *assistant = (Assistant *) data;
-    (void) assistant; // unused
-    (void) actor; // unused
-    g_print("clicked\n");
-    //g_print("slider value: %f\n", mx_slider_get_value(MX_SLIDER(assistant->slider)));
+    void on_button_clicked(MxButton *button, gpointer user_data);
 }
-*/
+
+void on_button_clicked(MxButton *button, gpointer user_data)
+{
+    Assistant *assistant = (Assistant *) user_data;
+    (void) assistant; // unused
+    (void) button; // unused
+    g_print("clicked\n");
+    if (assistant->ready_)
+    {
+        g_print("slider value: %f\n", mx_slider_get_value(MX_SLIDER(assistant->slider)));
+    }
+}
+
 int main(int argc, char *argv[])
 {
     clutter_init(&argc, &argv);
@@ -97,13 +108,18 @@ int main(int argc, char *argv[])
     assistant->script = require_script(GUI_SCRIPT);
     assistant->stage = stage;
     ClutterActor *root = CLUTTER_ACTOR(require_object_from_script(assistant->script, "root"));
+    assistant->slider = CLUTTER_ACTOR(require_object_from_script(assistant->script, "slider"));
     clutter_container_add_actor(CLUTTER_CONTAINER(stage), root);
     //g_signal_connect(button, "clicked", G_CALLBACK(on_button_clicked), assistant);
 
     // DONE
     g_signal_connect(stage, "key-press-event", G_CALLBACK(key_event_cb), assistant);
+    clutter_script_connect_signals(assistant->script, assistant);
+    assistant->ready_ = true;
     clutter_actor_show(stage);
     clutter_main();
+    
+    UNUSED(on_button_clicked);
     return 0;
 }
 
