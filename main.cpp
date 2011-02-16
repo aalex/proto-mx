@@ -57,7 +57,7 @@ typedef struct assistant_
     ClutterActor *stage;
     ClutterActor *slider;
     ClutterScript *script;
-    bool ready_;
+    gboolean ready_;
 } Assistant;
 
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer data)
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     // DONE
     g_signal_connect(stage, "key-press-event", G_CALLBACK(key_event_cb), assistant);
     clutter_script_connect_signals(assistant->script, assistant);
-    assistant->ready_ = true;
+    assistant->ready_ = TRUE;
     clutter_actor_show(stage);
     clutter_main();
     
