@@ -54,6 +54,48 @@
             "x" : 150,
             "y" : 150,
             "width" : 200
+        },
+        {
+
+            "id" : "grid",
+            "type" : "MxGrid",
+            "x" : 5,
+            "y" : 200,
+            "column-spacing" : 5,
+            "row-spacing" : 5,
+            "max-stride" : 2,
+            "homogenous-rows" : true,
+            "children" :
+            [
+                {
+                    "id" : "rect0",
+                    "type" : "ClutterRectangle",
+                    "width" : 200,
+                    "height" : 50,
+                    "color" : "#ffcc33ff"
+                },
+                {
+                    "id" : "rect1",
+                    "type" : "ClutterRectangle",
+                    "width" : 200,
+                    "height" : 50,
+                    "color" : "#ff9900ff"
+                },
+                {
+                    "id" : "rect2",
+                    "type" : "ClutterRectangle",
+                    "width" : 200,
+                    "height" : 50,
+                    "color" : "#ff6600ff"
+                },
+                {
+                    "id" : "rect3",
+                    "type" : "ClutterRectangle",
+                    "width" : 200,
+                    "height" : 50,
+                    "color" : "#ff3300ff"
+                }
+            ]
         }
     ]
 }
