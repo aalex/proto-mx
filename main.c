@@ -77,10 +77,12 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer d
     }
 }
 
-//extern "C"
-//{
-//    void on_button_clicked(MxButton *button, gpointer user_data);
-//}
+#ifdef __cplusplus
+    extern "C"
+    {
+        void on_button_clicked(MxButton *button, gpointer user_data);
+    }
+#endif // __cplusplus
 
 void on_button_clicked(MxButton *button, gpointer user_data)
 {
@@ -126,8 +128,6 @@ int main(int argc, char *argv[])
     assistant->ready_ = TRUE;
     clutter_actor_show(stage);
     clutter_main();
-    
-    UNUSED(on_button_clicked);
     return 0;
 }
 
